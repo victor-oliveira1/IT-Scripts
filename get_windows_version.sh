@@ -12,5 +12,7 @@ PASSWORD=
 
 HOSTS=$(nmap $SUBNET --open -p 135,445 -Pn -n| grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')
 for HOST in $HOSTS; do
-	echo "$HOST" - $(net rpc registry getvalue "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" ProductName -U "$USER"%"$PASSWORD" -I "$HOST"| grep -Eo '".*"')
+	HOSTNAME=$(net rpc info -U "$USER"%"$PASSWORD" -I "$HOST"| grep "Domain Name"| cut -d\  -f3)
+	WINVER=$(net rpc registry getvalue "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" ProductName -U "$USER"%"$PASSWORD" -I "$HOST"| grep -Eo '".*"')
+	echo "$HOST":"$HOSTNAME":"$WINVER"
 done
