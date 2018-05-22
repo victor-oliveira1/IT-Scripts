@@ -3,6 +3,7 @@
 import telnetlib
 import sys
 import re
+import mac_lookup
 
 user = 
 password = 
@@ -52,9 +53,16 @@ with open(host + '.csv', 'w') as file:
             #Removing More string
             line = line.replace('---- More ----', '')
             #Joining all together
-            line = ';'.join(line.split())
+            line = ' '.join(line.split())
+            line_split = line.split()
+            mac = line_split[0]
+            vlan = line_split[1]
+            port = line_split[3]
+            vendor = mac_lookup._macSearch(mac)
             #Writing to file
-            file.write(line + '\n')
+            file.write('"{}";"{}";"{}";"{}";'.format(
+                port, vlan, mac, vendor)
+                       )
         except:
             pass
 
