@@ -46,6 +46,7 @@ while True:
 
 print('Writing file...')
 with open(host + '.csv', 'w') as file:
+    file.write('"PORT";"VLAN";"MAC";"VENDOR"\n')
     for line in maclist.split('\n'):
         try:
             #Removing weird strings
@@ -60,7 +61,7 @@ with open(host + '.csv', 'w') as file:
             port = line_split[3]
             vendor = mac_lookup._macSearch(mac)
             #Writing to file
-            file.write('"{}";"{}";"{}";"{}";'.format(
+            file.write('"{}";"{}";"{}";"{}"\n'.format(
                 port, vlan, mac, vendor)
                        )
         except:
