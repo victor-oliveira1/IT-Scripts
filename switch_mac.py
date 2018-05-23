@@ -1,12 +1,18 @@
 #!/bin/python3
 #Get MAC addresses via telnet from managed switches
+
+#Copyright © 2018 Victor Oliveira <victor.oliveira@gmx.com>
+#This work is free. You can redistribute it and/or modify it under the
+#terms of the Do What The Fuck You Want To Public License, Version 2,
+#as published by Sam Hocevar. See the COPYING file for more details.
+
 import telnetlib
 import sys
 import re
 import mac_lookup
 
-user = 
-password = 
+user = 'INSERT USER'
+password = 'INSERT PASSWORD'
 host = sys.argv[1]
 port = 23
 timeout = 5
@@ -38,9 +44,9 @@ maclist = str()
 tmp = Read('---- More ----')
 while True:
     if 'More' in tmp:
+        maclist += tmp
         Send()
         tmp = Read('---- More ----')
-        maclist += tmp
     else:
         break
 
