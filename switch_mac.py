@@ -9,13 +9,18 @@
 import telnetlib
 import sys
 import re
-import mac_lookup
+import macvendor
 
-user = 'INSERT USER'
-password = 'INSERT PASSWORD'
+user = 'USER'
+password = 'PASSWORD'
 host = sys.argv[1]
 port = 23
 timeout = 5
+
+def isDirectPort(port):
+    if maclist.count(port) == 1:
+        return True
+    return False
 
 def Send(data=None):
     if data:
@@ -52,25 +57,23 @@ while True:
 
 print('Writing file...')
 with open(host + '.csv', 'w') as file:
-    file.write('"PORT";"VLAN";"MAC";"VENDOR"\n')
-    for line in maclist.split('\n'):
+    file.write('"PORT";"VLAN";"MAC";"VENDOR";"DIRECT"\n')
+    for line in maclist.split('\r\n'):
         try:
             #Removing weird strings
-            line = re.findall('\w{4}-\w{4}-\w{4}.*', line)[0]
-            #Removing More string
-            line = line.replace('---- More ----', '')
-            #Joining all together
-            line = ' '.join(line.split())
-            line_split = line.split()
-            mac = line_split[0]
-            vlan = line_split[1]
-            port = line_split[3]
-            vendor = mac_lookup._macSearch(mac)
+            line = re.findall('\w{4}-\w{4}-\w{4}.*', line)[0].split()
+
+            mac = line[0]
+            vlan = line[1]
+            port = line[3]
+            vendor = macvendor.Vendor(mac)[1]
+            direct_port = isDirectPort(port)
+            
             #Writing to file
-            file.write('"{}";"{}";"{}";"{}"\n'.format(
-                port, vlan, mac, vendor)
+            file.write('"{}";"{}";"{}";"{}";"{}"\n'.format(
+                port, vlan, mac, vendor, direct_port)
                        )
-        except:
+        except IndexError:
             pass
 
 tn.close()
