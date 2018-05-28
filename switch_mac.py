@@ -17,11 +17,6 @@ host = sys.argv[1]
 port = 23
 timeout = 5
 
-def isDirectPort(port):
-    if maclist.count(port) == 1:
-        return True
-    return False
-
 def Send(data=None):
     if data:
         data += '\n'
@@ -57,7 +52,7 @@ while True:
 
 print('Writing file...')
 with open(host + '.csv', 'w') as file:
-    file.write('"PORT";"VLAN";"MAC";"VENDOR";"DIRECT"\n')
+    file.write('"PORT";"VLAN";"MAC";"VENDOR";"MACS ON PORT"\n')
     for line in maclist.split('\r\n'):
         try:
             #Removing weird strings
@@ -67,11 +62,11 @@ with open(host + '.csv', 'w') as file:
             vlan = line[1]
             port = line[3]
             vendor = macvendor.Vendor(mac)[1]
-            direct_port = isDirectPort(port)
+            macs_on_port = maclist.count(port)
             
             #Writing to file
             file.write('"{}";"{}";"{}";"{}";"{}"\n'.format(
-                port, vlan, mac, vendor, direct_port)
+                port, vlan, mac, vendor, macs_on_ports)
                        )
         except IndexError:
             pass
