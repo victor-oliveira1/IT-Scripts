@@ -66,7 +66,7 @@ with open(host + '.csv', 'w') as file:
             
             #Writing to file
             file.write('"{}";"{}";"{}";"{}";"{}"\n'.format(
-                port, vlan, mac, vendor, macs_on_ports)
+                port, vlan, mac, vendor, macs_on_port)
                        )
         except IndexError:
             pass
